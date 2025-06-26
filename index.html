@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global Explorer: Your Ultimate Travel Planner</title>
+    <!-- Link to your main CSS file -->
+    <link rel="stylesheet" href="./css/styles.css">
+    <!-- Link to Google Fonts (Inter) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Header Section -->
+    <header class="main-header">
+        <div class="header-content container">
+            <a href="#" class="logo">Global Explorer</a>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#how-it-works">How It Works</a></li>
+                    <li><a href="#partners">Partnerships</a></li>
+                    <li><a href="#" id="login-nav-btn">Log In</a></li>
+                    <li><a href="#" id="signup-nav-btn" class="btn-primary-small">Sign Up</a></li>
+                </ul>
+            </nav>
+            <div class="hamburger-menu" id="hamburger-menu">
+                &#9776; <!-- Hamburger icon -->
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Sidebar Menu -->
+    <aside class="sidebar-menu" id="sidebar-menu">
+        <button class="close-btn" id="sidebar-close-btn">&times;</button>
+        <ul>
+            <li><a href="#features">Features</a></li>
+            <li><a href="#how-it-works">How It Works</a></li>
+            <li><a href="#partners">Partnerships</a></li>
+            <li><a href="#" id="login-sidebar-btn">Log In</a></li>
+            <li><a href="#" id="signup-sidebar-btn" class="btn-primary-small">Sign Up</a></li>
+        </ul>
+    </aside>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <div class="container hero-content">
+                <h1>Unlock Your Next Adventure.</h1>
+                <p>Discover personalized travel plans, unique experiences, and smart budget solutions worldwide.</p>
+                <button id="start-planning-btn" class="btn-primary">Start Planning Your Trip</button>
+            </div>
+        </section>
+
+        <!-- Features Section (Example) -->
+        <section id="features" class="features-section container">
+            <h2>Why Choose Global Explorer?</h2>
+            <div class="feature-grid">
+                <div class="feature-item">
+                    <h3>Personalized Itineraries</h3>
+                    <p>Tell us your interests, and we'll suggest destinations tailored just for you.</p>
+                </div>
+                <div class="feature-item">
+                    <h3>Smart Budgeting</h3>
+                    <p>Plan accommodation, transport, and activities within your desired spend.</p>
+                </div>
+                <div class="feature-item">
+                    <h3>Seamless Partnerships</h3>
+                    <p>Connect with trusted transport and accommodation providers.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Login/Signup Modals (Hidden by default, will be shown by JS) -->
+        <div id="auth-modal" class="modal">
+            <div class="modal-content">
+                <span class="close-button" id="auth-modal-close">&times;</span>
+                <div class="auth-forms">
+                    <div id="login-form-container" class="auth-form-active">
+                        <h2>Log In</h2>
+                        <form id="login-form">
+                            <label for="login-email">Email:</label>
+                            <input type="email" id="login-email" required>
+                            <label for="login-password">Password:</label>
+                            <input type="password" id="login-password" required>
+                            <button type="submit" class="btn-primary">Log In</button>
+                            <p class="auth-switch">Don't have an account? <a href="#" id="show-signup">Sign Up</a></p>
+                            <p id="login-error-message" class="error-message"></p>
+                        </form>
+                    </div>
+                    <div id="signup-form-container" style="display: none;">
+                        <h2>Sign Up</h2>
+                        <form id="signup-form">
+                            <label for="signup-email">Email:</label>
+                            <input type="email" id="signup-email" required>
+                            <label for="signup-password">Password:</label>
+                            <input type="password" id="signup-password" required>
+                            <button type="submit" class="btn-primary">Sign Up</button>
+                            <p class="auth-switch">Already have an account? <a href="#" id="show-login">Log In</a></p>
+                            <p id="signup-error-message" class="error-message"></p>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- User Dashboard/App Content (Hidden by default, shown after login) -->
+        <section id="app-dashboard" class="app-dashboard container" style="display: none;">
+            <p>Welcome, <span id="user-email-display"></span>! Let's plan your next trip.</p>
+            <button id="logout-btn" class="btn-secondary">Log Out</button>
+
+            <!-- Destination Planning Area -->
+            <div class="planning-area">
+                <h2>Plan Your Adventure</h2>
+                <label for="country-input">Where do you want to go?</label>
+                <input type="text" id="country-input" placeholder="e.g., Japan, Kenya">
+
+                <label for="activities-input">What do you want to do? (e.g., beach, hiking, culture)</label>
+                <input type="text" id="activities-input" placeholder="Comma-separated interests">
+
+                <label for="budget-accommodation">Accommodation Budget (USD):</label>
+                <input type="number" id="budget-accommodation" placeholder="e.g., 500">
+
+                <label for="budget-transport">Transport Budget (USD):</label>
+                <input type="number" id="budget-transport" placeholder="e.g., 200">
+
+                <label for="budget-activities">Activities/Food Budget (USD):</label>
+                <input type="number" id="budget-activities" placeholder="e.g., 300">
+
+                <button id="get-suggestions-btn" class="btn-primary">Get Suggestions</button>
+
+                <div id="suggestions-results" class="results-card">
+                    <h3>Suggested Destinations:</h3>
+                    <p class="placeholder-text">Suggestions will appear here.</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer Section -->
+    <footer class="main-footer">
+        <div class="container">
+            <p>&copy; 2025 Global Explorer. All rights reserved.</p>
+            <p><small>Connecting you to the world, responsibly.</small></p>
+        </div>
+    </footer>
+
+    <!-- Supabase Client Library -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <!-- Your main JavaScript file -->
+    <script src="./js/index.js"></script>
+</body>
+</html>
