@@ -1,140 +1,178 @@
-// Supabase Client Initialization (REPLACE WITH YOUR ACTUAL KEYS!)
+// js/script.js
 
-const SUPABASE_URL = "https://fnwmwbiycfzmgpoczpnm.supabase.co";
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZud213Yml5Y2Z6bWdwb2N6cG5tIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA5NDc3OTksImV4cCI6MjA2NjUyMzc5OX0.iHGZL_shA1G5p0aFzfix2jxSFDzz_ZhQotc5s7tYrQU"
+// --- SUPABASE CLIENT INITIALIZATION (IMPORTANT: REPLACE WITH YOUR ACTUAL KEYS!) ---
 
+const SUPABASE_URL = "https://fnwmwbiycfzmgpoczpnm.supabase.co"
+const SUPABASE_ANON_KEY = ""
+
+// Initialize the Supabase client
 const supabase = Supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 // --- DOM Elements ---
 const authModal = document.getElementById('auth-modal');
 const authModalCloseBtn = document.getElementById('auth-modal-close');
-const loginNavBtn = document.getElementById('login-nav-btn');
-const signupNavBtn = document.getElementById('signup-nav-btn');
-const loginSidebarBtn = document.getElementById('login-sidebar-btn');
-const signupSidebarBtn = document.getElementById('signup-sidebar-btn');
+
+// Header desktop nav buttons
+const signInBtn = document.getElementById('sign-in-btn');
+const getStartedBtn = document.getElementById('get-started-btn');
+
+// Hero section buttons
+const heroStartPlanningBtn = document.getElementById('hero-start-planning-btn');
+const heroExploreDestinationsBtn = document.getElementById('hero-explore-destinations-btn');
+
+// Bottom CTA button
+const bottomCreateAccountBtn = document.getElementById('bottom-create-account-btn');
+
+// Auth modal form containers
 const loginFormContainer = document.getElementById('login-form-container');
 const signupFormContainer = document.getElementById('signup-form-container');
-const showSignupLink = document.getElementById('show-signup');
-const showLoginLink = document.getElementById('show-login');
+const showSignupLink = document.getElementById('show-signup'); // Link to switch to signup
+const showLoginLink = document.getElementById('show-login');   // Link to switch to login
+
+// Login/Signup form elements
 const loginForm = document.getElementById('login-form');
 const signupForm = document.getElementById('signup-form');
 const loginErrorMessage = document.getElementById('login-error-message');
 const signupErrorMessage = document.getElementById('signup-error-message');
-const appDashboard = document.getElementById('app-dashboard');
-const userEmailDisplay = document.getElementById('user-email-display');
-const logoutBtn = document.getElementById('logout-btn');
-const startPlanningBtn = document.getElementById('start-planning-btn');
+
+// Hamburger menu elements
 const hamburgerMenu = document.getElementById('hamburger-menu');
 const sidebarMenu = document.getElementById('sidebar-menu');
 const sidebarCloseBtn = document.getElementById('sidebar-close-btn');
+const sidebarNavLinks = document.querySelectorAll('.ge-sidebar-menu a'); // All links within sidebar
 
-// Travel Planning Elements
-const countryInput = document.getElementById('country-input');
-const activitiesInput = document.getElementById('activities-input');
-const budgetAccommodation = document.getElementById('budget-accommodation');
-const budgetTransport = document.getElementById('budget-transport');
-const budgetActivities = document.getElementById('budget-activities');
-const getSuggestionsBtn = document.getElementById('get-suggestions-btn');
-const suggestionsResults = document.getElementById('suggestions-results');
+// Sidebar specific login/signup buttons (if they exist)
+const signInSidebarBtn = document.getElementById('sign-in-sidebar-btn');
+const getStartedSidebarBtn = document.getElementById('get-started-sidebar-btn');
+
+// Main app dashboard elements (initially hidden)
+// You'll need to add this section to your HTML for it to work fully later!
+// For now, it will just show a simple message or alert if auth is successful.
+const appDashboard = document.getElementById('app-dashboard-container'); // Add a div with this ID in main
+const userEmailDisplay = document.getElementById('user-email-display');
+const logoutBtn = document.getElementById('logout-btn');
 
 
 // --- Functions ---
 
 /**
+ * Displays the authentication modal and optionally switches between login/signup forms.
+ * @param {boolean} showLogin If true, shows the login form; otherwise, shows the signup form.
+ */
+function showAuthModal(showLogin = true) {
+    authModal.classList.add('active'); // Show the modal
+    document.body.classList.add('modal-open'); // Add class to body to prevent scrolling
+    
+    // Hide sidebar if it's open (important for mobile UX)
+    hideSidebar(); 
+
+    if (showLogin) {
+        loginFormContainer.style.display = 'block';
+        signupFormContainer.style.display = 'none';
+    } else {
+        loginFormContainer.style.display = 'none';
+        signupFormContainer.style.display = 'block';
+    }
+    // Clear form fields and any previous error messages
+    document.getElementById('login-email').value = '';
+    document.getElementById('login-password').value = '';
+    document.getElementById('signup-email').value = '';
+    document.getElementById('signup-password').value = '';
+    loginErrorMessage.textContent = '';
+    signupErrorMessage.textContent = '';
+}
+
+/**
+ * Hides the authentication modal.
+ */
+function hideAuthModal() {
+    authModal.classList.remove('active'); // Hide the modal
+    document.body.classList.remove('modal-open'); // Re-enable body scrolling
+}
+
+/**
+ * Toggles the mobile sidebar menu open/close.
+ */
+function toggleSidebar() {
+    sidebarMenu.classList.toggle('open');
+    // Prevent body scrolling when sidebar is open
+    document.body.classList.toggle('modal-open', sidebarMenu.classList.contains('open'));
+}
+
+/**
+ * Hides the mobile sidebar menu.
+ */
+function hideSidebar() {
+    sidebarMenu.classList.remove('open');
+    document.body.classList.remove('modal-open');
+}
+
+/**
  * Updates the UI based on the current authentication state.
- * Shows/hides login/signup forms, or the main app dashboard.
+ * Shows/hides login/signup buttons and switches between landing page/dashboard.
  */
 async function updateUI() {
     const { data: { user } } = await supabase.auth.getUser();
 
     if (user) {
         // User is logged in
-        authModal.classList.remove('active'); // Hide modal if open
-        document.body.classList.remove('modal-open'); // Remove scroll lock
-        
-        loginNavBtn.style.display = 'none';
-        signupNavBtn.style.display = 'none';
-        
-        // Hide sidebar login/signup if they exist
-        if (loginSidebarBtn) loginSidebarBtn.style.display = 'none';
-        if (signupSidebarBtn) signupSidebarBtn.style.display = 'none';
+        console.log("User logged in:", user.email);
+        hideAuthModal(); // Hide modal if it's open
+        hideSidebar(); // Hide sidebar if it's open
 
-        appDashboard.style.display = 'block'; // Show dashboard
-        userEmailDisplay.textContent = user.email;
-        startPlanningBtn.style.display = 'none'; // Hide start planning btn on landing page
+        // Hide public-facing buttons
+        if (signInBtn) signInBtn.style.display = 'none';
+        if (getStartedBtn) getStartedBtn.style.display = 'none';
+        if (heroStartPlanningBtn) heroStartPlanningBtn.style.display = 'none';
+        if (bottomCreateAccountBtn) bottomCreateAccountBtn.style.display = 'none';
         
-        // Adjust header nav for logged-in user if needed (e.g., show profile link)
-        // For now, just hide login/signup
-        const mainNavList = document.querySelector('.main-nav ul');
-        if (!mainNavList.querySelector('#logout-nav-item')) {
-            const logoutItem = document.createElement('li');
-            logoutItem.id = 'logout-nav-item';
-            logoutItem.innerHTML = `<a href="#" id="logout-nav-btn-header">Log Out</a>`;
-            mainNavList.appendChild(logoutItem);
-            document.getElementById('logout-nav-btn-header').addEventListener('click', handleLogout);
-        }
+        // Hide sidebar login/signup (if they exist)
+        if (signInSidebarBtn) signInSidebarBtn.style.display = 'none';
+        if (getStartedSidebarBtn) getStartedSidebarBtn.style.display = 'none';
+
+        // Show a placeholder dashboard or direct to app content
+        // IMPORTANT: You'll eventually replace this with your actual app dashboard HTML
+        const mainContent = document.querySelector('main'); // Select the main content area
+        mainContent.innerHTML = `
+            <section class="ge-app-dashboard ge-container" id="app-dashboard-container">
+                <h2>Welcome, <span id="user-email-display">${user.email}</span>!</h2>
+                <p>Your journey with Global Explorer begins now. Let's plan your next adventure!</p>
+                <button id="logout-btn" class="ge-btn ge-btn-secondary">Log Out</button>
+                <!-- This is where your full app features (planning, suggestions etc.) will go -->
+                <div class="planning-area" style="margin-top: 40px; text-align: left;">
+                    <h3>Plan Your Adventure (Coming Soon!)</h3>
+                    <p>This is your personalized dashboard. Features like destination planning, budget tools, and partner integrations will appear here.</p>
+                </div>
+            </section>
+        `;
+        // Re-get logout button after it's added to DOM
+        const newLogoutBtn = document.getElementById('logout-btn');
+        if (newLogoutBtn) newLogoutBtn.addEventListener('click', handleLogout);
+
 
     } else {
         // User is logged out
-        loginNavBtn.style.display = 'inline-block';
-        signupNavBtn.style.display = 'inline-block';
-
-        if (loginSidebarBtn) loginSidebarBtn.style.display = 'block';
-        if (signupSidebarBtn) signupSidebarBtn.style.display = 'block';
-
-        appDashboard.style.display = 'none'; // Hide dashboard
-        startPlanningBtn.style.display = 'inline-block'; // Show start planning btn
+        console.log("User is logged out.");
         
-        const logoutNavItem = document.getElementById('logout-nav-item');
-        if (logoutNavItem) {
-            logoutNavItem.remove();
+        // Show public-facing buttons
+        if (signInBtn) signInBtn.style.display = 'inline-block';
+        if (getStartedBtn) getStartedBtn.style.display = 'inline-block';
+        if (heroStartPlanningBtn) heroStartPlanningBtn.style.display = 'inline-block'; // Or show login/signup modal directly
+        if (bottomCreateAccountBtn) bottomCreateAccountBtn.style.display = 'inline-block';
+
+        // Show sidebar login/signup (if they exist)
+        if (signInSidebarBtn) signInSidebarBtn.style.display = 'block';
+        if (getStartedSidebarBtn) getStartedSidebarBtn.style.display = 'block';
+
+        // Revert main content to landing page (if it was changed to dashboard)
+        // This is a basic way to revert, for more complex apps you'd swap content.
+        const mainContent = document.querySelector('main');
+        // Check if we are currently displaying the dashboard
+        if (mainContent.querySelector('#app-dashboard-container')) {
+            // Reload the page to go back to the original landing page
+            // For a single page app without reload, you'd swap content instead.
+            window.location.reload(); 
         }
-    }
-}
-
-/**
- * Handles user login.
- * @param {Event} event The form submission event.
- */
-async function handleLogin(event) {
-    event.preventDefault();
-    loginErrorMessage.textContent = ''; // Clear previous error
-
-    const email = loginForm.elements['login-email'].value;
-    const password = loginForm.elements['login-password'].value;
-
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
-
-    if (error) {
-        loginErrorMessage.textContent = error.message;
-    } else {
-        authModal.classList.remove('active');
-        document.body.classList.remove('modal-open');
-        updateUI(); // Update UI after successful login
-    }
-}
-
-/**
- * Handles user signup.
- * @param {Event} event The form submission event.
- */
-async function handleSignup(event) {
-    event.preventDefault();
-    signupErrorMessage.textContent = ''; // Clear previous error
-
-    const email = signupForm.elements['signup-email'].value;
-    const password = signupForm.elements['signup-password'].value;
-
-    const { error } = await supabase.auth.signUp({ email, password });
-
-    if (error) {
-        signupErrorMessage.textContent = error.message;
-    } else {
-        alert('Signup successful! Please check your email to confirm your account.');
-        // Optionally, close modal or switch to login form
-        authModal.classList.remove('active');
-        document.body.classList.remove('modal-open');
-        updateUI(); // Update UI, though user might not be immediately 'confirmed'
     }
 }
 
@@ -147,100 +185,44 @@ async function handleLogout(event) {
     const { error } = await supabase.auth.signOut();
     if (error) {
         console.error('Error logging out:', error.message);
+        alert(`Logout error: ${error.message}`); // Provide user feedback
     } else {
-        updateUI(); // Update UI after successful logout
+        alert('You have been logged out successfully!');
+        updateUI(); // Update UI after successful logout (will reload page to landing)
     }
 }
 
-/**
- * Displays the authentication modal.
- * @param {boolean} showLogin If true, show login form; otherwise, show signup.
- */
-function showAuthModal(showLogin = true) {
-    authModal.classList.add('active');
-    document.body.classList.add('modal-open'); // Prevent body scroll
-    if (showLogin) {
-        loginFormContainer.style.display = 'block';
-        signupFormContainer.style.display = 'none';
-    } else {
-        loginFormContainer.style.display = 'none';
-        signupFormContainer.style.display = 'block';
-    }
-    // Clear any previous error messages
-    loginErrorMessage.textContent = '';
-    signupErrorMessage.textContent = '';
-}
-
-/**
- * Handles getting travel suggestions.
- * (This is a placeholder; will be fleshed out with API calls later)
- */
-async function handleGetSuggestions() {
-    suggestionsResults.innerHTML = '<p class="placeholder-text">Searching for suggestions...</p>';
-    
-    const country = countryInput.value.trim();
-    const activities = activitiesInput.value.trim();
-    const budgetAcc = parseFloat(budgetAccommodation.value);
-    const budgetTrans = parseFloat(budgetTransport.value);
-    const budgetAct = parseFloat(budgetActivities.value);
-
-    // Basic validation
-    if (!country && !activities) {
-        suggestionsResults.innerHTML = '<p class="error-message">Please enter a country or activities.</p>';
-        return;
-    }
-    
-    // Simulate API call (replace with actual Supabase data fetching later)
-    setTimeout(() => {
-        suggestionsResults.innerHTML = `
-            <h3>Top Suggestions for ${country || 'Your Interests'}:</h3>
-            <div class="suggestion-item">
-                <h4>Example Destination: Coastal Getaway in ${country || 'Unknown'}</h4>
-                <p>Perfect for beach lovers and scuba diving, staying within your budget of $${(budgetAcc + budgetTrans + budgetAct).toFixed(2)}.</p>
-                <p>Partnership Transport: Safari Van (budget-friendly)</p>
-                <p>Accommodation: Eco-Lodge ($${budgetAcc.toFixed(2)})</p>
-            </div>
-            <div class="suggestion-item">
-                <h4>Example Destination: Mountain Trek in ${country || 'Unknown'}</h4>
-                <p>Ideal for hiking and wildlife spotting. Great local food options.</p>
-                <p>Partnership Transport: Matatu (local experience, very cheap)</p>
-                <p>Accommodation: Local Guesthouse ($${budgetAcc.toFixed(2)})</p>
-            </div>
-            <p>More detailed suggestions will be added with real data!</p>
-        `;
-    }, 1500); // Simulate network delay
-}
-
-/**
- * Toggles the mobile sidebar menu.
- */
-function toggleSidebar() {
-    sidebarMenu.classList.toggle('open');
-}
 
 // --- Event Listeners ---
 document.addEventListener('DOMContentLoaded', () => {
-    updateUI(); // Check auth state on page load
+    // Initial UI update based on current auth state
+    updateUI();
 
-    // Header nav buttons
-    loginNavBtn.addEventListener('click', (e) => { e.preventDefault(); showAuthModal(true); });
-    signupNavBtn.addEventListener('click', (e) => { e.preventDefault(); showAuthModal(false); });
+    // Header navigation buttons (desktop)
+    signInBtn.addEventListener('click', (e) => { e.preventDefault(); showAuthModal(true); });
+    getStartedBtn.addEventListener('click', (e) => { e.preventDefault(); showAuthModal(false); });
 
-    // Sidebar nav buttons
-    if (loginSidebarBtn) loginSidebarBtn.addEventListener('click', (e) => { e.preventDefault(); showAuthModal(true); toggleSidebar(); });
-    if (signupSidebarBtn) signupSidebarBtn.addEventListener('click', (e) => { e.preventDefault(); showAuthModal(false); toggleSidebar(); });
+    // Hero section buttons
+    heroStartPlanningBtn.addEventListener('click', (e) => { e.preventDefault(); showAuthModal(false); }); // "Start Planning" implies signup
+    heroExploreDestinationsBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        alert('Exploring destinations is coming soon! Please sign up or sign in to start planning.'); // Simple placeholder
+    });
+
+    // Bottom CTA button
+    bottomCreateAccountBtn.addEventListener('click', (e) => { e.preventDefault(); showAuthModal(false); }); // "Create Your Account" implies signup
 
     // Modal close button
-    authModalCloseBtn.addEventListener('click', () => { authModal.classList.remove('active'); document.body.classList.remove('modal-open'); });
-    // Close modal if clicked outside content
+    authModalCloseBtn.addEventListener('click', hideAuthModal);
+
+    // Close modal if clicked outside modal content
     authModal.addEventListener('click', (e) => {
         if (e.target === authModal) {
-            authModal.classList.remove('active');
-            document.body.classList.remove('modal-open');
+            hideAuthModal();
         }
     });
 
-    // Auth form switches
+    // Switch between login and signup forms within the modal
     showSignupLink.addEventListener('click', (e) => { e.preventDefault(); loginFormContainer.style.display = 'none'; signupFormContainer.style.display = 'block'; });
     showLoginLink.addEventListener('click', (e) => { e.preventDefault(); loginFormContainer.style.display = 'block'; signupFormContainer.style.display = 'none'; });
 
@@ -248,29 +230,22 @@ document.addEventListener('DOMContentLoaded', () => {
     loginForm.addEventListener('submit', handleLogin);
     signupForm.addEventListener('submit', handleSignup);
 
-    // Logout button (in dashboard)
-    logoutBtn.addEventListener('click', handleLogout);
-
-    // Start Planning Button (on landing page)
-    startPlanningBtn.addEventListener('click', (e) => { e.preventDefault(); showAuthModal(true); });
-
-    // Hamburger menu
+    // Hamburger menu toggle
     hamburgerMenu.addEventListener('click', toggleSidebar);
-    sidebarCloseBtn.addEventListener('click', toggleSidebar);
+    sidebarCloseBtn.addEventListener('click', hideSidebar);
 
-    // Close sidebar if a link inside it is clicked (assuming it navigates or triggers an action)
-    sidebarMenu.querySelectorAll('a').forEach(link => {
-        link.addEventListener('click', () => {
-            // Give a small delay to allow navigation if it's an anchor link
-            setTimeout(() => toggleSidebar(), 300);
-        });
+    // Close sidebar when a navigation link inside it is clicked
+    sidebarNavLinks.forEach(link => {
+        link.addEventListener('click', hideSidebar);
     });
 
-    // Get Suggestions Button
-    getSuggestionsBtn.addEventListener('click', handleGetSuggestions);
+    // Sidebar specific login/signup buttons (these will also open the modal)
+    if (signInSidebarBtn) signInSidebarBtn.addEventListener('click', (e) => { e.preventDefault(); showAuthModal(true); });
+    if (getStartedSidebarBtn) getStartedSidebarBtn.addEventListener('click', (e) => { e.preventDefault(); showAuthModal(false); });
 });
 
-// Supabase Auth Listener (for real-time UI updates)
+// Supabase Auth Listener (for real-time UI updates after login/logout, or page refresh)
+// This is critical for updating the UI correctly even if user refreshes page or logs in from another tab
 supabase.auth.onAuthStateChange((event, session) => {
     console.log('Auth state changed:', event, session);
     updateUI();
