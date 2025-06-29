@@ -1,9 +1,9 @@
-// js/script.js
+// js/index.js
 
 // --- SUPABASE CLIENT INITIALIZATION (IMPORTANT: REPLACE WITH YOUR ACTUAL KEYS!) ---
 
-const SUPABASE_URL = "https://fnwmwbiycfzmgpoczpnm.supabase.co"
-const SUPABASE_ANON_KEY = ""
+const SUPABASE_URL = "https://fnwmwbiycfzmgpoczpnm.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZud213Yml5Y2Z6bWdwb2N6cG5tIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA5NDc3OTksImV4cCI6MjA2NjUyMzc5OX0.iHGZL_shA1G5p0aFzfix2jxSFDzz_ZhQotc5s7tYrQU";
 
 // Initialize the Supabase client
 const supabase = Supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -12,45 +12,44 @@ const supabase = Supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 const authModal = document.getElementById('auth-modal');
 const authModalCloseBtn = document.getElementById('auth-modal-close');
 
-// Header desktop nav buttons
+// Header desktop nav buttons (IDs remain the same)
 const signInBtn = document.getElementById('sign-in-btn');
 const getStartedBtn = document.getElementById('get-started-btn');
 
-// Hero section buttons
+// Hero section buttons (IDs remain the same)
 const heroStartPlanningBtn = document.getElementById('hero-start-planning-btn');
 const heroExploreDestinationsBtn = document.getElementById('hero-explore-destinations-btn');
 
-// Bottom CTA button
+// Bottom CTA button (ID remains the same)
 const bottomCreateAccountBtn = document.getElementById('bottom-create-account-btn');
 
-// Auth modal form containers
+// Auth modal form containers (IDs remain the same)
 const loginFormContainer = document.getElementById('login-form-container');
 const signupFormContainer = document.getElementById('signup-form-container');
 const showSignupLink = document.getElementById('show-signup'); // Link to switch to signup
 const showLoginLink = document.getElementById('show-login');   // Link to switch to login
 
-// Login/Signup form elements
+// Login/Signup form elements (IDs remain the same)
 const loginForm = document.getElementById('login-form');
 const signupForm = document.getElementById('signup-form');
 const loginErrorMessage = document.getElementById('login-error-message');
 const signupErrorMessage = document.getElementById('signup-error-message');
 
-// Hamburger menu elements
+// Hamburger menu elements (IDs remain the same)
 const hamburgerMenu = document.getElementById('hamburger-menu');
 const sidebarMenu = document.getElementById('sidebar-menu');
 const sidebarCloseBtn = document.getElementById('sidebar-close-btn');
-const sidebarNavLinks = document.querySelectorAll('.ge-sidebar-menu a'); // All links within sidebar
+// Updated selector for sidebar links as class names have tk- prefix
+const sidebarNavLinks = document.querySelectorAll('.tk-sidebar-menu a'); 
 
-// Sidebar specific login/signup buttons (if they exist)
+// Sidebar specific login/signup buttons (IDs remain the same)
 const signInSidebarBtn = document.getElementById('sign-in-sidebar-btn');
 const getStartedSidebarBtn = document.getElementById('get-started-sidebar-btn');
 
 // Main app dashboard elements (initially hidden)
-// You'll need to add this section to your HTML for it to work fully later!
-// For now, it will just show a simple message or alert if auth is successful.
-const appDashboard = document.getElementById('app-dashboard-container'); // Add a div with this ID in main
-const userEmailDisplay = document.getElementById('user-email-display');
-const logoutBtn = document.getElementById('logout-btn');
+// Note: These are defined globally but will be used after content is dynamically changed.
+const appDashboardContainerId = 'app-dashboard-container'; // ID for the dynamically created dashboard section
+let logoutBtn = null; // Will be assigned after dynamic content creation
 
 
 // --- Functions ---
@@ -108,11 +107,75 @@ function hideSidebar() {
 }
 
 /**
+ * Handles user login.
+ * @param {Event} event The submit event from the login form.
+ */
+async function handleLogin(event) {
+    event.preventDefault(); // Prevent default form submission
+    loginErrorMessage.textContent = ''; // Clear previous errors
+
+    const email = document.getElementById('login-email').value;
+    const password = document.getElementById('login-password').value;
+
+    const { data, error } = await supabase.auth.signInWithPassword({
+        email: email,
+        password: password,
+    });
+
+    if (error) {
+        console.error('Login error:', error.message);
+        loginErrorMessage.textContent = `Login failed: ${error.message}`;
+    } else {
+        console.log('User logged in:', data.user);
+        hideAuthModal();
+        updateUI(); // Update UI after successful login
+        alert('Logged in successfully! Welcome back.');
+    }
+}
+
+/**
+ * Handles user signup.
+ * @param {Event} event The submit event from the signup form.
+ */
+async function handleSignup(event) {
+    event.preventDefault(); // Prevent default form submission
+    signupErrorMessage.textContent = ''; // Clear previous errors
+
+    const email = document.getElementById('signup-email').value;
+    const password = document.getElementById('signup-password').value;
+
+    const { data, error } = await supabase.auth.signUp({
+        email: email,
+        password: password,
+    });
+
+    if (error) {
+        console.error('Signup error:', error.message);
+        signupErrorMessage.textContent = `Signup failed: ${error.message}`;
+    } else {
+        console.log('User signed up:', data.user);
+        hideAuthModal();
+        alert('Signup successful! Please check your email to confirm your account.');
+        // No need to update UI immediately for signup as user isn't fully logged in until email confirmed
+    }
+}
+
+
+/**
  * Updates the UI based on the current authentication state.
  * Shows/hides login/signup buttons and switches between landing page/dashboard.
  */
 async function updateUI() {
     const { data: { user } } = await supabase.auth.getUser();
+    const mainContent = document.querySelector('main'); // Select the main content area
+
+    // Get references to elements that might be hidden/shown, in case they're available
+    const headerSignInBtn = document.getElementById('sign-in-btn');
+    const headerGetStartedBtn = document.getElementById('get-started-btn');
+    const heroStartBtn = document.getElementById('hero-start-planning-btn');
+    const bottomCtaBtn = document.getElementById('bottom-create-account-btn');
+    const sidebarSignIn = document.getElementById('sign-in-sidebar-btn');
+    const sidebarGetStarted = document.getElementById('get-started-sidebar-btn');
 
     if (user) {
         // User is logged in
@@ -120,58 +183,92 @@ async function updateUI() {
         hideAuthModal(); // Hide modal if it's open
         hideSidebar(); // Hide sidebar if it's open
 
-        // Hide public-facing buttons
-        if (signInBtn) signInBtn.style.display = 'none';
-        if (getStartedBtn) getStartedBtn.style.display = 'none';
-        if (heroStartPlanningBtn) heroStartPlanningBtn.style.display = 'none';
-        if (bottomCreateAccountBtn) bottomCreateAccountBtn.style.display = 'none';
+        // Hide public-facing buttons if they exist
+        if (headerSignInBtn) headerSignInBtn.style.display = 'none';
+        if (headerGetStartedBtn) headerGetStartedBtn.style.display = 'none';
+        if (heroStartBtn) heroStartBtn.style.display = 'none';
+        if (bottomCtaBtn) bottomCtaBtn.style.display = 'none';
+        if (sidebarSignIn) sidebarSignIn.style.display = 'none';
+        if (sidebarGetStarted) sidebarGetStarted.style.display = 'none';
         
-        // Hide sidebar login/signup (if they exist)
-        if (signInSidebarBtn) signInSidebarBtn.style.display = 'none';
-        if (getStartedSidebarBtn) getStartedSidebarBtn.style.display = 'none';
+        // Hide existing landing page sections
+        document.querySelector('.tk-hero-section').style.display = 'none';
+        document.querySelector('.tk-section-padding').style.display = 'none';
+        document.querySelector('.tk-cta-section').style.display = 'none';
 
-        // Show a placeholder dashboard or direct to app content
-        // IMPORTANT: You'll eventually replace this with your actual app dashboard HTML
-        const mainContent = document.querySelector('main'); // Select the main content area
-        mainContent.innerHTML = `
-            <section class="ge-app-dashboard ge-container" id="app-dashboard-container">
-                <h2>Welcome, <span id="user-email-display">${user.email}</span>!</h2>
-                <p>Your journey with Global Explorer begins now. Let's plan your next adventure!</p>
-                <button id="logout-btn" class="ge-btn ge-btn-secondary">Log Out</button>
-                <!-- This is where your full app features (planning, suggestions etc.) will go -->
-                <div class="planning-area" style="margin-top: 40px; text-align: left;">
-                    <h3>Plan Your Adventure (Coming Soon!)</h3>
-                    <p>This is your personalized dashboard. Features like destination planning, budget tools, and partner integrations will appear here.</p>
+        // Append or replace main content with dashboard
+        let dashboardSection = document.getElementById(appDashboardContainerId);
+        if (!dashboardSection) {
+            dashboardSection = document.createElement('section');
+            dashboardSection.id = appDashboardContainerId;
+            dashboardSection.className = 'tk-app-dashboard tk-container'; // Add classes for styling
+            mainContent.appendChild(dashboardSection);
+        }
+
+        // Clear existing content in dashboard section
+        dashboardSection.innerHTML = `
+            <h2 style="color: var(--dark-blue); font-size: 2.5em; margin-bottom: 20px; text-align: center;">Welcome, <span id="user-email-display">${user.email}</span>!</h2>
+            <p style="font-size: 1.1em; color: var(--text-light); max-width: 800px; margin: 0 auto 30px auto; text-align: center;">Your adventure with Tribe Konnect truly begins now. Let's plan your next unforgettable trip!</p>
+            <div style="display: flex; justify-content: center; gap: 20px; margin-bottom: 40px;">
+                <button id="logout-btn" class="tk-btn tk-btn-outline">Log Out</button>
+                <button class="tk-btn tk-btn-primary">Start Planning New Trip</button>
+            </div>
+            
+            <div class="tk-card-grid" style="margin-top: 50px;">
+                <!-- Placeholder for User's Upcoming Trips -->
+                <div class="tk-card" style="padding: 30px; text-align: center;">
+                    <h3>Upcoming Trips</h3>
+                    <p>No trips planned yet. Click "Start Planning New Trip" to begin!</p>
+                    <img src="https://placehold.co/300x200/FF6600/ffffff?text=Your+Trips" alt="Upcoming Trips" class="tk-card-image" style="height: 150px; margin-top: 15px;">
                 </div>
-            </section>
+                <!-- Placeholder for Saved Destinations -->
+                <div class="tk-card" style="padding: 30px; text-align: center;">
+                    <h3>Saved Destinations</h3>
+                    <p>Favorite places you'd love to visit.</p>
+                    <img src="https://placehold.co/300x200/002244/ffffff?text=Saved+Places" alt="Saved Destinations" class="tk-card-image" style="height: 150px; margin-top: 15px;">
+                </div>
+                <!-- Placeholder for Recent Activity -->
+                <div class="tk-card" style="padding: 30px; text-align: center;">
+                    <h3>Recent Activity</h3>
+                    <p>View your past bookings and inquiries.</p>
+                     <img src="https://placehold.co/300x200/FF6600/ffffff?text=Recent+Activity" alt="Recent Activity" class="tk-card-image" style="height: 150px; margin-top: 15px;">
+                </div>
+            </div>
         `;
         // Re-get logout button after it's added to DOM
-        const newLogoutBtn = document.getElementById('logout-btn');
-        if (newLogoutBtn) newLogoutBtn.addEventListener('click', handleLogout);
+        logoutBtn = document.getElementById('logout-btn'); // Assign to global logoutBtn variable
+        if (logoutBtn) logoutBtn.addEventListener('click', handleLogout);
 
+        // Add some basic styling for the dynamically added dashboard section
+        dashboardSection.style.minHeight = '60vh';
+        dashboardSection.style.display = 'flex';
+        dashboardSection.style.flexDirection = 'column';
+        dashboardSection.style.alignItems = 'center';
+        dashboardSection.style.justifyContent = 'center';
+        dashboardSection.style.padding = '80px 0';
+        dashboardSection.style.backgroundColor = 'var(--light-grey)';
 
     } else {
         // User is logged out
         console.log("User is logged out.");
         
-        // Show public-facing buttons
-        if (signInBtn) signInBtn.style.display = 'inline-block';
-        if (getStartedBtn) getStartedBtn.style.display = 'inline-block';
-        if (heroStartPlanningBtn) heroStartPlanningBtn.style.display = 'inline-block'; // Or show login/signup modal directly
-        if (bottomCreateAccountBtn) bottomCreateAccountBtn.style.display = 'inline-block';
+        // Show public-facing buttons if they exist
+        if (headerSignInBtn) headerSignInBtn.style.display = 'inline-block';
+        if (headerGetStartedBtn) headerGetStartedBtn.style.display = 'inline-block';
+        if (heroStartBtn) heroStartBtn.style.display = 'inline-block';
+        if (bottomCtaBtn) bottomCtaBtn.style.display = 'inline-block';
+        if (sidebarSignIn) sidebarSignIn.style.display = 'block';
+        if (sidebarGetStarted) sidebarGetStarted.style.display = 'block';
 
-        // Show sidebar login/signup (if they exist)
-        if (signInSidebarBtn) signInSidebarBtn.style.display = 'block';
-        if (getStartedSidebarBtn) getStartedSidebarBtn.style.display = 'block';
+        // Show existing landing page sections
+        document.querySelector('.tk-hero-section').style.display = 'flex'; // Use flex for centering
+        document.querySelector('.tk-section-padding').style.display = 'block';
+        document.querySelector('.tk-cta-section').style.display = 'block';
 
-        // Revert main content to landing page (if it was changed to dashboard)
-        // This is a basic way to revert, for more complex apps you'd swap content.
-        const mainContent = document.querySelector('main');
-        // Check if we are currently displaying the dashboard
-        if (mainContent.querySelector('#app-dashboard-container')) {
-            // Reload the page to go back to the original landing page
-            // For a single page app without reload, you'd swap content instead.
-            window.location.reload(); 
+        // Remove dashboard section if it exists
+        let dashboardSection = document.getElementById(appDashboardContainerId);
+        if (dashboardSection) {
+            dashboardSection.remove();
         }
     }
 }
@@ -181,14 +278,14 @@ async function updateUI() {
  * @param {Event} event The click event.
  */
 async function handleLogout(event) {
-    event.preventDefault(); // Prevent default link behavior
+    if (event) event.preventDefault(); // Prevent default link behavior if applicable
     const { error } = await supabase.auth.signOut();
     if (error) {
         console.error('Error logging out:', error.message);
         alert(`Logout error: ${error.message}`); // Provide user feedback
     } else {
         alert('You have been logged out successfully!');
-        updateUI(); // Update UI after successful logout (will reload page to landing)
+        // The onAuthStateChange listener will call updateUI, which will revert to landing page
     }
 }
 
@@ -199,40 +296,40 @@ document.addEventListener('DOMContentLoaded', () => {
     updateUI();
 
     // Header navigation buttons (desktop)
-    signInBtn.addEventListener('click', (e) => { e.preventDefault(); showAuthModal(true); });
-    getStartedBtn.addEventListener('click', (e) => { e.preventDefault(); showAuthModal(false); });
+    if (signInBtn) signInBtn.addEventListener('click', (e) => { e.preventDefault(); showAuthModal(true); });
+    if (getStartedBtn) getStartedBtn.addEventListener('click', (e) => { e.preventDefault(); showAuthModal(false); });
 
     // Hero section buttons
-    heroStartPlanningBtn.addEventListener('click', (e) => { e.preventDefault(); showAuthModal(false); }); // "Start Planning" implies signup
-    heroExploreDestinationsBtn.addEventListener('click', (e) => {
+    if (heroStartPlanningBtn) heroStartPlanningBtn.addEventListener('click', (e) => { e.preventDefault(); showAuthModal(false); }); // "Start Planning" implies signup
+    if (heroExploreDestinationsBtn) heroExploreDestinationsBtn.addEventListener('click', (e) => {
         e.preventDefault();
         alert('Exploring destinations is coming soon! Please sign up or sign in to start planning.'); // Simple placeholder
     });
 
     // Bottom CTA button
-    bottomCreateAccountBtn.addEventListener('click', (e) => { e.preventDefault(); showAuthModal(false); }); // "Create Your Account" implies signup
+    if (bottomCreateAccountBtn) bottomCreateAccountBtn.addEventListener('click', (e) => { e.preventDefault(); showAuthModal(false); }); // "Create Your Account" implies signup
 
     // Modal close button
-    authModalCloseBtn.addEventListener('click', hideAuthModal);
+    if (authModalCloseBtn) authModalCloseBtn.addEventListener('click', hideAuthModal);
 
     // Close modal if clicked outside modal content
-    authModal.addEventListener('click', (e) => {
+    if (authModal) authModal.addEventListener('click', (e) => {
         if (e.target === authModal) {
             hideAuthModal();
         }
     });
 
     // Switch between login and signup forms within the modal
-    showSignupLink.addEventListener('click', (e) => { e.preventDefault(); loginFormContainer.style.display = 'none'; signupFormContainer.style.display = 'block'; });
-    showLoginLink.addEventListener('click', (e) => { e.preventDefault(); loginFormContainer.style.display = 'block'; signupFormContainer.style.display = 'none'; });
+    if (showSignupLink) showSignupLink.addEventListener('click', (e) => { e.preventDefault(); loginFormContainer.style.display = 'none'; signupFormContainer.style.display = 'block'; });
+    if (showLoginLink) showLoginLink.addEventListener('click', (e) => { e.preventDefault(); loginFormContainer.style.display = 'block'; signupFormContainer.style.display = 'none'; });
 
     // Auth form submissions
-    loginForm.addEventListener('submit', handleLogin);
-    signupForm.addEventListener('submit', handleSignup);
+    if (loginForm) loginForm.addEventListener('submit', handleLogin);
+    if (signupForm) signupForm.addEventListener('submit', handleSignup);
 
     // Hamburger menu toggle
-    hamburgerMenu.addEventListener('click', toggleSidebar);
-    sidebarCloseBtn.addEventListener('click', hideSidebar);
+    if (hamburgerMenu) hamburgerMenu.addEventListener('click', toggleSidebar);
+    if (sidebarCloseBtn) sidebarCloseBtn.addEventListener('click', hideSidebar);
 
     // Close sidebar when a navigation link inside it is clicked
     sidebarNavLinks.forEach(link => {
@@ -242,11 +339,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // Sidebar specific login/signup buttons (these will also open the modal)
     if (signInSidebarBtn) signInSidebarBtn.addEventListener('click', (e) => { e.preventDefault(); showAuthModal(true); });
     if (getStartedSidebarBtn) getStartedSidebarBtn.addEventListener('click', (e) => { e.preventDefault(); showAuthModal(false); });
-});
-
-// Supabase Auth Listener (for real-time UI updates after login/logout, or page refresh)
-// This is critical for updating the UI correctly even if user refreshes page or logs in from another tab
-supabase.auth.onAuthStateChange((event, session) => {
-    console.log('Auth state changed:', event, session);
-    updateUI();
+    
+    // Supabase Auth Listener (for real-time UI updates after login/logout, or page refresh)
+    supabase.auth.onAuthStateChange((event, session) => {
+        console.log('Auth state changed:', event, session);
+        updateUI();
+    });
 });

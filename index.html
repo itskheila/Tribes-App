@@ -3,126 +3,174 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Global Explorer: Your Journey Starts Here</title>
-    <!-- Link to your main CSS file -->
-    <link rel="stylesheet" href="./css/style.css">
-    <!-- Link to Google Fonts (Inter and Poppins for the modern look) -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Font Awesome for icons (for feature boxes and footer) -->
+    <title>Tribe Konnect: Your Ultimate Adventure Partner</title>
+    <!-- Google Fonts: Poppins (for modern clarity) and Open Sans (for body) -->
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="./css/style.css">
+    
 </head>
 <body>
-    <!-- Header Section (No Change) -->
-    <header class="ge-header">
-        <div class="ge-container header-content">
-            <a href="#" class="ge-logo-group">
-                <i class="fas fa-globe-americas ge-logo-icon"></i> <!-- Globe icon -->
-                <span class="ge-app-name">Global Explorer</span>
+    <!-- Top Bar -->
+    <div class="tk-topbar">
+        <div class="tk-container topbar-content">
+            <div class="topbar-contact">
+                <span><i class="fas fa-phone"></i> +254 7XX XXX XXX</span>
+                <span><i class="fas fa-envelope"></i> info@tribekonnect.com</span>
+            </div>
+            <div class="topbar-social">
+                <a href="#"><i class="fab fa-facebook-f"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+                <a href="#"><i class="fab fa-linkedin-in"></i></a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header Section -->
+    <header class="tk-header">
+        <div class="tk-container main-header-content">
+            <a href="#" class="tk-logo-group">
+                <i class="fas fa-plane-departure tk-logo-icon"></i> <!-- Changed icon to be more adventure-focused -->
+                <span class="tk-app-name">Tribe Konnect</span>
             </a>
-            <nav class="ge-main-nav" id="desktop-nav"> <!-- Added ID for easier targeting -->
+            <nav class="tk-main-nav" id="desktop-nav">
                 <ul>
-                    <li><a href="#features">Features</a></li>
-                    <li><a href="#how-it-works">How It Works</a></li>
-                    <li><a href="#partners">Partnerships</a></li>
-                    <li><a href="#" id="sign-in-btn" class="ge-btn ge-btn-link">Sign In</a></li>
-                    <li><a href="#" id="get-started-btn" class="ge-btn ge-btn-primary">Get Started</a></li>
+                    <li><a href="#">Home</a></li>
+                    <li class="dropdown">
+                        <a href="#">Destinations <i class="fas fa-chevron-down"></i></a>
+                        <ul>
+                            <li><a href="#">Kenya Safaris</a></li>
+                            <li><a href="#">Coastal Escapes</a></li>
+                            <li><a href="#">Mountain Treks</a></li>
+                            <li><a href="#">International Tours</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#">Packages <i class="fas fa-chevron-down"></i></a>
+                        <ul>
+                            <li><a href="#">Family Holidays</a></li>
+                            <li><a href="#">Honeymoon Deals</a></li>
+                            <li><a href="#">Adventure Sports</a></li>
+                            <li><a href="#">Corporate Retreats</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Contact</a></li>
+                    <li><a href="#" id="sign-in-btn" class="tk-btn tk-btn-link">Sign In</a></li>
+                    <li><a href="#" id="get-started-btn" class="tk-btn tk-btn-primary">Get Started</a></li>
                 </ul>
             </nav>
-            <div class="ge-hamburger-menu" id="hamburger-menu"> <!-- Updated class name -->
-                &#9776; <!-- Hamburger icon -->
+            <div class="tk-hamburger-menu" id="hamburger-menu">
+                &#9776;
             </div>
         </div>
     </header>
 
-    <!-- Mobile Sidebar Menu (No Change) -->
-    <aside class="ge-sidebar-menu" id="sidebar-menu"> <!-- Updated class name -->
-        <button class="ge-close-btn" id="sidebar-close-btn">&times;</button> <!-- Updated class name -->
+    <!-- Mobile Sidebar Menu -->
+    <aside class="tk-sidebar-menu" id="sidebar-menu">
+        <button class="tk-close-btn" id="sidebar-close-btn">&times;</button>
         <ul>
-            <li><a href="#features" class="sidebar-nav-link">Features</a></li>
-            <li><a href="#how-it-works" class="sidebar-nav-link">How It Works</a></li>
-            <li><a href="#partners" class="sidebar-nav-link">Partnerships</a></li>
-            <li><a href="#" id="sign-in-sidebar-btn" class="sidebar-nav-link">Sign In</a></li> <!-- Added ID -->
-            <li><a href="#" id="get-started-sidebar-btn" class="sidebar-nav-link ge-btn-primary-small">Get Started</a></li> <!-- Added ID -->
+            <li><a href="#">Home</a></li>
+            <li><a href="#">Destinations</a></li>
+            <li><a href="#">Packages</a></li>
+            <li><a href="#">About Us</a></li>
+            <li><a href="#">Contact</a></li>
+            <li><a href="#" id="sign-in-sidebar-btn" class="sidebar-nav-link">Sign In</a></li>
+            <li><a href="#" id="get-started-sidebar-btn" class="sidebar-nav-link tk-btn tk-btn-primary">Get Started</a></li>
         </ul>
     </aside>
 
-    <!-- Main Content (No Change) -->
+    <!-- Main Content -->
     <main>
-        <!-- Hero Section (No Change) -->
-        <section class="ge-hero-section">
-            <div class="ge-container ge-hero-content">
-                <h1>Your Journey Starts Here</h1>
-                <p>Discover amazing destinations, plan your perfect trip, and connect with local experiences. All in one secure platform designed for modern travelers.</p>
-                <div class="ge-hero-buttons">
-                    <button id="hero-start-planning-btn" class="ge-btn ge-btn-primary">Start Planning</button>
-                    <button id="hero-explore-destinations-btn" class="ge-btn ge-btn-outline">Explore Destinations</button>
+        <!-- Hero Section -->
+        <section class="tk-hero-section">
+            <div class="tk-container tk-hero-content">
+                <h1>Explore the World's Wonders with Tribe Konnect.</h1>
+                <p>Your journey to unforgettable safaris, breathtaking beaches, and cultural immersions begins here. Plan your dream escape.</p>
+                <div class="tk-hero-search-bar">
+                    <input type="text" placeholder="Where do you want to go?">
+                    <input type="date">
+                    <input type="text" placeholder="Guests">
+                    <button class="tk-btn tk-btn-primary">Search Adventure</button>
                 </div>
             </div>
         </section>
 
-        <!-- Features Section (No Change) -->
-        <section id="features" class="ge-features-section">
-            <div class="ge-container">
-                <h2>Everything You Need for Perfect Travel</h2>
-                <div class="ge-feature-grid">
-                    <div class="ge-feature-item">
-                        <div class="ge-icon-wrapper ge-icon-blue"><i class="fas fa-map-marker-alt"></i></div>
-                        <h3>Destination Discovery</h3>
-                        <p>Explore curated destinations with detailed guides, photos, and insider tips from locals.</p>
+        <!-- Popular Destinations/Tour Packages Section -->
+        <section class="tk-section-padding">
+            <div class="tk-container">
+                <h2>Popular Tour Packages</h2>
+                <div class="tk-card-grid">
+                    <!-- Example Tour Card 1 -->
+                    <div class="tk-card">
+                        <img src="https://placehold.co/600x400/FF6600/ffffff?text=Maasai+Mara+Safari" alt="Maasai Mara Safari" class="tk-card-image">
+                        <div class="tk-card-content">
+                            <h3>Maasai Mara Wildlife Safari</h3>
+                            <p>Witness the Great Migration and magnificent wildlife in Kenya's iconic reserve.</p>
+                            <div class="tk-card-price">Starting from $1,200</div>
+                            <a href="#" class="tk-btn tk-btn-primary tk-card-btn">View Details</a>
+                        </div>
                     </div>
-                    <div class="ge-feature-item">
-                        <div class="ge-icon-wrapper ge-icon-green"><i class="fas fa-calculator"></i></div>
-                        <h3>Smart Budget Planning</h3>
-                        <p>Plan your trip budget with our intelligent calculator that considers all expenses.</p>
+                    <!-- Example Tour Card 2 -->
+                    <div class="tk-card">
+                        <img src="https://placehold.co/600x400/002244/ffffff?text=Zanzibar+Beach" alt="Zanzibar Beach Escape" class="tk-card-image">
+                        <div class="tk-card-content">
+                            <h3>Zanzibar Beach & Culture Escape</h3>
+                            <p>Relax on pristine beaches and explore the historical Stone Town of Zanzibar.</p>
+                            <div class="tk-card-price">Starting from $850</div>
+                            <a href="#" class="tk-btn tk-btn-primary tk-card-btn">View Details</a>
+                        </div>
                     </div>
-                    <div class="ge-feature-item">
-                        <div class="ge-icon-wrapper ge-icon-purple"><i class="fas fa-plane"></i></div>
-                        <h3>Transport Booking</h3>
-                        <p>Find and book flights, buses, trains, and local transport all in one place.</p>
+                    <!-- Example Tour Card 3 -->
+                    <div class="tk-card">
+                        <img src="https://placehold.co/600x400/FF6600/ffffff?text=Mount+Kenya+Trek" alt="Mount Kenya Trek" class="tk-card-image">
+                        <div class="tk-card-content">
+                            <h3>Mount Kenya Summit Trek</h3>
+                            <p>Challenge yourself with an exhilarating trek to the majestic peaks of Mount Kenya.</p>
+                            <div class="tk-card-price">Starting from $980</div>
+                            <a href="#" class="tk-btn tk-btn-primary tk-card-btn">View Details</a>
+                        </div>
                     </div>
-                    <div class="ge-feature-item">
-                        <div class="ge-icon-wrapper ge-icon-orange"><i class="fas fa-users"></i></div>
-                        <h3>Local Guides</h3>
-                        <p>Connect with verified local guides for authentic experiences and hidden gems.</p>
-                    </div>
-                    <div class="ge-feature-item">
-                        <div class="ge-icon-wrapper ge-icon-red"><i class="fas fa-shield-alt"></i></div>
-                        <h3>Secure Payments</h3>
-                        <p>Book with confidence using our secure escrow system that protects both travelers and providers.</p>
-                    </div>
-                    <div class="ge-feature-item">
-                        <div class="ge-icon-wrapper ge-icon-teal"><i class="fas fa-globe"></i></div>
-                        <h3>Global Community</h3>
-                        <p>Join a community of travelers sharing experiences, tips, and travel stories.</p>
+                     <!-- Example Tour Card 4 -->
+                    <div class="tk-card">
+                        <img src="https://placehold.co/600x400/002244/ffffff?text=Dubai+City+Tour" alt="Dubai City Tour" class="tk-card-image">
+                        <div class="tk-card-content">
+                            <h3>Dubai City & Desert Experience</h3>
+                            <p>Experience the ultimate blend of modern luxury and Arabian adventure.</p>
+                            <div class="tk-card-price">Starting from $1,500</div>
+                            <a href="#" class="tk-btn tk-btn-primary tk-card-btn">View Details</a>
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Call to Action Section (Bottom) (No Change) -->
-        <section class="ge-cta-section">
-            <div class="ge-container">
-                <h2>Ready to Start Your Adventure?</h2>
-                <p>Join thousands of travelers who trust Global Explorer for their journeys.</p>
-                <button id="bottom-create-account-btn" class="ge-btn ge-btn-outline-inverted">Create Your Account</button>
+        <!-- Call to Action Section (Bottom) -->
+        <section class="tk-cta-section">
+            <div class="tk-container">
+                <h2>Ready for Your Next Great Adventure?</h2>
+                <p>Plan your journey effortlessly with Tribe Konnect. Exceptional experiences await.</p>
+                <button id="bottom-create-account-btn" class="tk-btn tk-btn-primary">Book Your Dream Trip Now</button>
             </div>
         </section>
 
-        <!-- Login/Signup Modals (No Change) -->
-        <div id="auth-modal" class="ge-modal">
-            <div class="ge-modal-content">
-                <span class="ge-close-button" id="auth-modal-close">&times;</span>
-                <div class="ge-auth-forms">
-                    <div id="login-form-container" class="ge-auth-form-active">
+        <!-- Login/Signup Modals (Structure reused, classes updated to tk-) -->
+        <div id="auth-modal" class="tk-modal">
+            <div class="tk-modal-content">
+                <span class="tk-close-button" id="auth-modal-close">&times;</span>
+                <div class="tk-auth-forms">
+                    <div id="login-form-container" class="tk-auth-form-active">
                         <h2>Sign In</h2>
                         <form id="login-form">
                             <label for="login-email">Email:</label>
                             <input type="email" id="login-email" placeholder="your.email@example.com" required>
                             <label for="login-password">Password:</label>
                             <input type="password" id="login-password" placeholder="••••••••" required>
-                            <button type="submit" class="ge-btn ge-btn-primary">Sign In</button>
-                            <p class="ge-auth-switch">Don't have an account? <a href="#" id="show-signup">Get Started</a></p>
-                            <p id="login-error-message" class="ge-error-message"></p>
+                            <button type="submit" class="tk-btn tk-btn-primary">Sign In</button>
+                            <p class="tk-auth-switch">Don't have an account? <a href="#" id="show-signup">Get Started</a></p>
+                            <p id="login-error-message" class="tk-error-message"></p>
                         </form>
                     </div>
                     <div id="signup-form-container" style="display: none;">
@@ -132,9 +180,9 @@
                             <input type="email" id="signup-email" placeholder="your.email@example.com" required>
                             <label for="signup-password">Password:</label>
                             <input type="password" id="signup-password" placeholder="••••••••" required>
-                            <button type="submit" class="ge-btn ge-btn-primary">Sign Up</button>
-                            <p class="ge-auth-switch">Already have an account? <a href="#" id="show-login">Sign In</a></p>
-                            <p id="signup-error-message" class="ge-error-message"></p>
+                            <button type="submit" class="tk-btn tk-btn-primary">Sign Up</button>
+                            <p class="tk-auth-switch">Already have an account? <a href="#" id="show-login">Sign In</a></p>
+                            <p id="signup-error-message" class="tk-error-message"></p>
                         </form>
                     </div>
                 </div>
@@ -142,33 +190,53 @@
         </div>
     </main>
 
-    <!-- Footer Section (UPDATED) -->
-    <footer class="ge-footer">
-        <div class="ge-container footer-content">
-            <div class="footer-left">
-                <p>&copy; 2025 Global Explorer. All rights reserved.</p>
-                <nav class="footer-links">
+    <!-- Footer Section -->
+    <footer class="tk-footer">
+        <div class="tk-container">
+            <div class="footer-grid">
+                <div class="footer-col footer-contact">
+                    <h4>Contact Us</h4>
+                    <p><i class="fas fa-map-marker-alt"></i> 123 Safari Drive, Nairobi, Kenya</p>
+                    <p><i class="fas fa-phone"></i> +254 7XX XXX XXX</p>
+                    <p><i class="fas fa-envelope"></i> info@tribekonnect.com</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Quick Links</h4>
                     <ul>
-                        <li><a href="#">Terms</a></li>
-                        <li><a href="#">Sitemap</a></li>
-                        <li><a href="#">Privacy</a></li>
-                        <li><a href="#">Your Privacy Choices <i class="fas fa-info-circle"></i></a></li>
+                        <li><a href="#">Home</a></li>
+                        <li><a href="#">Destinations</a></li>
+                        <li><a href="#">Packages</a></li>
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Contact</a></li>
                     </ul>
-                </nav>
+                </div>
+                <div class="footer-col">
+                    <h4>Travel Resources</h4>
+                    <ul>
+                        <li><a href="#">Visa Requirements</a></li>
+                        <li><a href="#">Travel Insurance</a></li>
+                        <li><a href="#">Health & Safety</a></li>
+                        <li><a href="#">FAQs</a></li>
+                        <li><a href="#">Blog</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Legal</h4>
+                    <ul>
+                        <li><a href="#">Terms & Conditions</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Cookie Policy</a></li>
+                        <li><a href="#">Sitemap</a></li>
+                    </ul>
+                </div>
             </div>
-            <div class="footer-right">
-                <div class="footer-option">
-                    <i class="fas fa-globe"></i>
-                    <span>English (US)</span>
-                </div>
-                <div class="footer-option">
-                    <i class="fas fa-dollar-sign"></i>
-                    <span>KES</span> <!-- Changed from EUR as per previous discussions -->
-                </div>
-                <div class="footer-social-icons">
+            <div class="footer-bottom">
+                <p>&copy; 2025 Tribe Konnect. All Rights Reserved.</p>
+                <div class="footer-social-bottom">
                     <a href="#"><i class="fab fa-facebook-f"></i></a>
                     <a href="#"><i class="fab fa-twitter"></i></a>
                     <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
                 </div>
             </div>
         </div>
